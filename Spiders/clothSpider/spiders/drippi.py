@@ -30,7 +30,7 @@ class DrippySpider(scrapy.Spider):
 
         available = False
         sizes = []
-        if response.css('b.button.sold-out') is None:
+        if response.css('b.button.sold-out').get() is None:
             available = True
             sizes = response.css('select#size option::text').getall()
 
