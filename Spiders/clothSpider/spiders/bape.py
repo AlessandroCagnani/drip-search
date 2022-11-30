@@ -36,7 +36,7 @@ class DrippySpider(scrapy.Spider):
         sizes = []
 
         def isAvailable(x):
-            if "OUT OF STOCK" in x:
+            if "OUT OF STOCK" or "Select Size" in x:
                 return False
             else:
                 return True
@@ -46,11 +46,11 @@ class DrippySpider(scrapy.Spider):
             x = x.replace(" -  ONLY ONE LEFT", '')
             return x
 
-        if response.css('#add-to-cart.disabled') is None:
+        if response.css('#add-to-cart.disabled').get() is None:
             available = True
-            all_sizes = response.css('select#size option::text').getall()
+            all_sizes = response.css('select#va-size option::text').getall()
             size = filter(isAvailable, all_sizes)
-            sizes = map(size_cleaner, size)
+            sizes = list(map(size_cleaner, size))
 
         yield {
             'title': response.css('.pdp-name > h1:nth-child(1)::text').get(),

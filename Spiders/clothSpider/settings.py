@@ -12,9 +12,17 @@ BOT_NAME = 'clothSpider'
 SPIDER_MODULES = ['clothSpider.spiders']
 NEWSPIDER_MODULE = 'clothSpider.spiders'
 
+DOWNLOAD_HANDLERS = {
+    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'clothSpider (+http://www.yourdomain.com)'
+#USER_AGENT = get_random_agent()
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
