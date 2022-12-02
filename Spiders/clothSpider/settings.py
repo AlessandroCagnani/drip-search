@@ -12,6 +12,8 @@ BOT_NAME = 'clothSpider'
 SPIDER_MODULES = ['clothSpider.spiders']
 NEWSPIDER_MODULE = 'clothSpider.spiders'
 
+# SCRAPY PLAYWRIGHT
+
 DOWNLOAD_HANDLERS = {
     "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
@@ -19,7 +21,19 @@ DOWNLOAD_HANDLERS = {
 
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 
+# PLAYWRIGHT_LAUNCH_OPTIONS = {"headless": False}
 
+
+PLAYWRIGHT_ABORT_REQUEST = lambda req: req.resource_type == "image" or req.resource_type == "stylesheet"
+
+# CONCURRENT_REQUESTS = 30
+# PLAYWRIGHT_CONTEXT_ARGS = {'ignore_https_errors': True}
+# PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 30000
+...
+RETRY_ENABLED = True
+RETRY_TIMES = 3
+
+#################### 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = get_random_agent()
@@ -33,7 +47,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
