@@ -5,9 +5,9 @@ class farfetchSpider(scrapy.Spider):
     start_urls = [
         'https://www.farfetch.com/ch/shopping/men/jackets-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
         'https://www.farfetch.com/ch/shopping/men/sweaters-knitwear-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/trousers-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
-        'https://www.farfetch.com/ch/shopping/men/t-shirts-vests-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
-        'https://www.farfetch.com/ch/shopping/men/shirts-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
+        'https://www.farfetch.com/ch/shopping/men/trousers-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+        'https://www.farfetch.com/ch/shopping/men/t-shirts-vests-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+        'https://www.farfetch.com/ch/shopping/men/shirts-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
         'https://www.farfetch.com/ch/shopping/men/denim-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
     ]
 
