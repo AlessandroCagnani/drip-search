@@ -674,6 +674,8 @@ export default {
     },
     beforeCreate() {
         //TODO: fetching data
+        console.log("beforeCreate ", this.$route.query.q);
+
     },
     beforeMount() {
         let perGroup = 4;

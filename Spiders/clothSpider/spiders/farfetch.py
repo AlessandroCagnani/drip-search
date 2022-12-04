@@ -61,7 +61,7 @@ class farfetchSpider(scrapy.Spider):
             'price': response.css('p.ltr-194u1uv-Heading::text').get().strip(),
             'image': response.css('button img:nth-child(1)::attr(src)').get(),
             'link': response.url,
-            'category': response.meta.category,
+            'category': response.meta.get('category'),
             'description': ' '.join(response.css('._fdc1e5 li::text').getall()).strip(),
             'color': response.css('li.ltr-4y8w0i-Body:nth-child(1)::text').get().strip(),
             'available': True,

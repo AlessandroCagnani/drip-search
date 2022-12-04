@@ -1,15 +1,32 @@
 <template>
     <div class="container">
         <div class="bar">
-            <input class="searchbar" title="searchbar" type="text" placeholder="Aim to the drip">
+            <input @keyup.enter="search" class="searchbar" title="searchbar" type="text" placeholder="Aim to the drip">
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "searchBar"
+    name: "searchBar",
+    methods: {
+        search: function(event) {
+            
+            let query = event.target.value.replaceAll(" ", "+")
+            console.log("searching:  ", query);
+
+            this.$router.push({
+                name: "search",
+                query: {
+                    q: query
+                }
+            });
+        }
+    }
 }
+
+
+
 </script>
 
 <style scoped>
