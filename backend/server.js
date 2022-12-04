@@ -46,7 +46,7 @@ app.get("/search", (req, res) => {
   })
     .then((response) => {
       console.log("response: ", response.data);
-      res.status(200).send("recived");
+      res.status(200).json(response.data);
     })
     .catch((error) => {
       console.log("error: ", error);
