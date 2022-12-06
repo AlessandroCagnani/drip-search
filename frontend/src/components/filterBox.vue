@@ -26,7 +26,7 @@
       <vue-collapsible-panel :expanded="false">
         <template #title> Price </template>
         <template #content> 
-
+          ciao
         </template>
       </vue-collapsible-panel>
     </vue-collapsible-panel-group>
@@ -60,6 +60,7 @@ export default {
 </script>
 
 <style scoped>
+@import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css';
 
 .brand-box {
   min-height: 20vh;

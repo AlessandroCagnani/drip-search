@@ -9,6 +9,7 @@
   "dependencies": {
     "@coreui/coreui": "^4.2.3",
     "@coreui/vue": "^4.5.0",
+    "@dafcoe/vue-collapsible-panel": "^0.2.0",
     "@popperjs/core": "^2.11.6",
     "axios": "^1.2.0",
     "bootstrap": "^5.2.3",
