@@ -26,7 +26,8 @@
       <vue-collapsible-panel :expanded="false">
         <template #title> Price </template>
         <template #content> 
-          ciao
+          <p>Price range</p>
+          <Slider v-model="value" :min="0" :max="2000"/> 
         </template>
       </vue-collapsible-panel>
     </vue-collapsible-panel-group>
@@ -34,11 +35,16 @@
 </template>
 
 <script>
+import Slider from '@vueform/slider'
 
 export default {
   name: "filterBox",
+  components: {
+    Slider
+  },
   data() {
     return {
+      value: [0, 2000],
       brands: [
         "Supreme",
         "Nike",
@@ -61,6 +67,7 @@ export default {
 
 <style scoped>
 @import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css';
+@import "@vueform/slider/themes/default.css";
 
 .brand-box {
   min-height: 20vh;
