@@ -21,6 +21,7 @@ export default {
                     q: query
                 }
             });
+            
         }
     }
 }
@@ -31,7 +32,6 @@ export default {
 
 <style scoped>
     .container {
-        margin-top: 5%;
         width: 100%;
         height: 100%;
     }
@@ -48,6 +48,7 @@ export default {
         width:575px;
         border-radius:30px;
         border:1px solid #dcdcdc;
+        background-color: white;
     }
     .bar:hover{
         box-shadow: 1px 1px 8px 1px #dcdcdc;

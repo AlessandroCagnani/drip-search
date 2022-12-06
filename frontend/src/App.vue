@@ -1,13 +1,29 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-
+    <navBar class="sticky"/>
   </nav>
   <router-view/>
 </template>
 
+<script>
+import navBar from '@/components/navBar.vue'
+
+export default {
+  name: 'App',
+  components: {
+    navBar
+  }
+}
+</script>
+
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+* {
+    font-family: 'Oswald', sans-serif;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -16,8 +32,9 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+body {
+  margin: 0;
+  padding: 0;
 }
 
 nav a {

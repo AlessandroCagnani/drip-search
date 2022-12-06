@@ -4,14 +4,6 @@ const cors = require("cors");
 const axios = require("axios");
 const bodyParser = require("body-parser");
 const app = express();
-const SolrNode = require("solr-node");
-
-var client = new SolrNode({
-  host: "localhost",
-  port: "8983",
-  collection: "drip",
-  protocol: "http",
-});
 
 app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded

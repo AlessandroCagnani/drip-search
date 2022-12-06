@@ -1,38 +1,68 @@
 <template>
-  <div class="row" v-for="(row, index) in finalList">
-    <div class="drip-card" v-for="item in row">
-      <div class="image-box">
-        <img class="item-img" :src="item.image" />
-      </div>
-      <div class="title-box">
-        <span class="item-title">{{ item.title }}</span>
-      </div>
-      <div class="desc-box">
-        <span class="item-desc">{{ item.description }}</span>
-      </div>
-      <div class="centered">
-        <a class="item-button button-6" :href="item.link" target="_blanck"
-          >See the sauce</a
-        >
+  <div class="grid">
+    <filterBox class="sidebar"/>
+
+    <div class="row-box">
+      <div class="row" v-for="(row, index) in finalList">
+        <div class="drip-card" v-for="item in row">
+          <div class="image-box">
+            <img class="item-img" :src="item.image" />
+          </div>
+          <div class="title-box">
+            <span class="item-title">{{ item.title }}</span>
+          </div>
+          <div class="desc-box">
+            <span class="item-desc">{{ item.description }}</span>
+          </div>
+          <div class="centered">
+            <a class="item-button button-6" :href="item.link" target="_blanck">
+              See the sauce
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { CCard } from "@coreui/vue/";
 import axios from "axios";
+import filterBox from "@/components/filterBox.vue";
 
 export default {
   name: "productList",
+  components: {
+    filterBox,
+  },
   data() {
     return {
       itemList: [],
       finalList: [],
     };
   },
+  watch: {
+    $route(newUrl, oldUrl) {
+      console.log("new query", newUrl.query.q);
+
+      fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          this.itemList = Object.freeze(data.response.docs);
+          console.log("itemList ", this.itemList);
+          let perGroup = 4;
+          let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
+          console.log(numGroups);
+          this.finalList = new Array(numGroups)
+            .fill("")
+            .map((_, i) =>
+              this.itemList.slice(i * perGroup, (i + 1) * perGroup)
+            );
+        });
+    },
+  },
   beforeCreate() {
-    //TODO: fetching data
     console.log("beforeCreate ", this.$route.query.q);
 
     fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
@@ -55,14 +85,24 @@ export default {
 </script>
 
 <style scoped>
-@import "@coreui/coreui/dist/css/coreui.min.css";
-/**
-     * style for the row container
-     */
+/* @import "@coreui/coreui/dist/css/coreui.min.css"; */
 
-/**
-     * style for the row
-     */
+.sidebar {
+  max-width: 20vw;
+  min-width: 20vw;
+  float: left;
+}
+
+.row-box {
+  max-width: 80vw;
+  min-width: 80vw;
+  float: right;
+}
+
+.grid {
+  display: flex;
+  flex-direction: row;
+}
 
 .centered {
   display: flex;
@@ -77,8 +117,9 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 100%;
   margin-bottom: 2rem;
+  /* margin-left: 5vw;
+  margin-right: 5vw; */
 }
 
 .row > * {
@@ -87,7 +128,7 @@ export default {
 }
 
 .drip-card {
-  width: 18vw;
+  width: 15vw;
   height: 35vh;
   max-height: 35vh;
   border-radius: 25px;

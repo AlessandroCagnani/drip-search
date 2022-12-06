@@ -3,7 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import  CCard  from "@coreui/vue/";
+import CoreuiVue from '@coreui/vue';
+import VueCollapsiblePanel from '@dafcoe/vue-collapsible-panel'
+
+import "bootstrap/dist/css/bootstrap.min.css"
+
+import "bootstrap"
 
 
-createApp(App).use(store).use(router).use(CCard).mount('#app')
+createApp(App).use(store).use(router).use(VueCollapsiblePanel).mount('#app')
