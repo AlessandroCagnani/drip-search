@@ -53,6 +53,7 @@ class DrippySpider(scrapy.Spider):
             sizes = list(map(size_cleaner, size))
 
         yield {
+            'brand': "bape",
             'title': response.css('.pdp-name > h1:nth-child(1)::text').get(),
             'price': response.css('.headline4::text').get().strip(),
             'image': response.css('#pdp-product-img-0 > img:nth-child(1)::attr(data-src)').get(),

@@ -35,6 +35,7 @@ class DrippySpider(scrapy.Spider):
             sizes = response.css('select#size option::text').getall()
 
         yield {
+            'brand': "supreme",
             'title': response.css('h1.protect::text').get(),
             'price': response.css('p.price span::text').get(),
             'image': response.urljoin(response.css('img#img-main::attr(src)').get()),
