@@ -12,13 +12,16 @@ export default {
     methods: {
         search: function(event) {
             
-            let query = event.target.value.replaceAll(" ", "+")
+            let query = event.target.value
             console.log("searching:  ", query);
 
             this.$router.push({
                 name: "search",
                 query: {
-                    q: query
+                    q: query,
+                    // brands: '#',
+                    // category: '#',
+                    // price: '#',
                 }
             });
             

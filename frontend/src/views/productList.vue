@@ -1,6 +1,6 @@
 <template>
   <div class="grid">
-    <filterBox class="sidebar"/>
+    <filterBox class="sidebar" :brands="this.brands" :categories="this.categories" @filterPrice="filterPrice"/>
 
     <div class="row-box">
       <div class="row" v-for="(row, index) in finalList">
@@ -9,10 +9,10 @@
             <img class="item-img" :src="item.image" />
           </div>
           <div class="title-box">
-            <span class="item-title">{{ item.title }}</span>
+            <span class="item-title">{{ item.title[0] }}</span>
           </div>
           <div class="desc-box">
-            <span class="item-desc">{{ item.description }}</span>
+            <span class="item-desc">{{ item.description[0] }}</span>
           </div>
           <div class="centered">
             <a class="item-button button-6" :href="item.link" target="_blanck">
@@ -37,12 +37,15 @@ export default {
   data() {
     return {
       itemList: [],
+        filteredList: [],
       finalList: [],
+        brands: ["supreme", "bape"],
+        categories: []
     };
   },
   watch: {
     $route(newUrl, oldUrl) {
-      console.log("new query", newUrl.query.q);
+      console.log("new query", newUrl.query);
 
       fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
         .then((response) => {
@@ -50,20 +53,25 @@ export default {
         })
         .then((data) => {
           this.itemList = Object.freeze(data.response.docs);
-          console.log("itemList ", this.itemList);
+          // console.log("itemList ", this.itemList);
           let perGroup = 4;
           let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
-          console.log(numGroups);
+          // console.log(numGroups);
           this.finalList = new Array(numGroups)
             .fill("")
             .map((_, i) =>
               this.itemList.slice(i * perGroup, (i + 1) * perGroup)
             );
+          // let brandList = [...new Set(this.itemList.map((item) => item.brand))]
+          //   console.log(brandList)
+          // this.brands = brandList
+            this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
+
         });
     },
   },
   beforeCreate() {
-    console.log("beforeCreate ", this.$route.query.q);
+    console.log("beforeCreate ", this.$route.query);
 
     fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
       .then((response) => {
@@ -78,9 +86,30 @@ export default {
         this.finalList = new Array(numGroups)
           .fill("")
           .map((_, i) => this.itemList.slice(i * perGroup, (i + 1) * perGroup));
+
+          // let brandList = [...new Set(this.itemList.map((item) => item.brand))]
+          // console.log("////////////",brandList)
+          // this.brands = brandList
+
+          this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
+
       });
   },
   beforeMount() {},
+    methods: {
+        filterPrice: function (event) {
+            let perGroup = 4;
+            let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
+            this.finalList = new Array(numGroups)
+                .fill("")
+                .map((_, i) =>
+                    this.itemList.filter((item) => {
+                        let itemPrice = parseInt(item.price[0].replace("€", ""))
+                        return itemPrice <= event[1] && itemPrice >= event[0]
+                    }).slice(i * perGroup, (i + 1) * perGroup)
+                );
+        }
+    }
 };
 </script>
 
@@ -102,6 +131,7 @@ export default {
 .grid {
   display: flex;
   flex-direction: row;
+
 }
 
 .centered {
@@ -116,10 +146,11 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
+    grid-gap: 4rem;
   margin-bottom: 2rem;
-  /* margin-left: 5vw;
-  margin-right: 5vw; */
+  margin-left: 1vw;
+  margin-right: 5vw;
 }
 
 .row > * {
