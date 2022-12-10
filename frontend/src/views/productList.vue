@@ -1,6 +1,11 @@
 <template>
   <div class="grid">
-    <filterBox class="sidebar" :brands="this.brands" :categories="this.categories" @filterPrice="filterPrice"/>
+    <filterBox class="sidebar"
+               :brands="this.brands"
+               :categories="this.categories"
+               @filterPrice="filterPrice"
+
+    />
 
     <div class="row-box">
       <div class="row" v-for="(row, index) in finalList">
@@ -47,9 +52,14 @@ export default {
     $route(newUrl, oldUrl) {
       console.log("new query", newUrl.query);
 
-      fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
+        axios({
+            method: "post",
+            url: "http://localhost:8888/search",
+            data: newUrl.query,
+        })
         .then((response) => {
-          return response.json();
+            console.log(response.data);
+            return response.data;
         })
         .then((data) => {
           this.itemList = Object.freeze(data.response.docs);
@@ -73,9 +83,14 @@ export default {
   beforeCreate() {
     console.log("beforeCreate ", this.$route.query);
 
-    fetch(`http://localhost:8888/search?q=${this.$route.query.q}`)
+      axios({
+          method: "post",
+          url: "http://localhost:8888/search",
+          data: this.$route.query,
+      })
       .then((response) => {
-        return response.json();
+          console.log(response.data);
+          return response.data;
       })
       .then((data) => {
         this.itemList = Object.freeze(data.response.docs);

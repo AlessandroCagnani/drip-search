@@ -15,8 +15,9 @@ app.use(bodyParser.json());
 /////////////       ROUTES       //////////////
 ///////////////////////////////////////////////
 
-app.get("/search", (req, res) => {
-  const q = req.query.q;
+app.post("/search", (req, res) => {
+  console.log(req.body);
+  const q = req.body.q;
   console.log("q: ", q);
 
 //   let body = {
