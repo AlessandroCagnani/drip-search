@@ -20,7 +20,11 @@ class farfetchSpider(scrapy.Spider):
     #         yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        
+        if response.css('.ltr-ol0ad9'):
+            url = response.css('.ltr-ol0ad9::attr(href)').get()
+            next_page = response.urljoin(url)
+            yield scrapy.Request(next_page, callback=self.parse)
+
         for item in response.css('.ltr-wp3p8x.el4qh4n0 li a::attr(href)').getall():
             if item is not None:
                 next_page = response.urljoin(item)
@@ -56,7 +60,7 @@ class farfetchSpider(scrapy.Spider):
 
         
         yield {
-            'brand': "Amiri",
+            'brand': response.css('.ltr-jtdb6u-Body-Heading-HeadingBold::text').get(),
             'title': response.css('.ltr-i980jo.el610qn0 a::text').get() + " " + response.css('.ltr-13ze6d5-Body::text').get(),
             'price': response.css('p.ltr-194u1uv-Heading::text').get().strip(),
             'image': response.css('button img:nth-child(1)::attr(src)').get(),
