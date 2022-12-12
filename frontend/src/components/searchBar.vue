@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="bar">
-            <input @keyup.enter="search" class="searchbar" title="searchbar" type="text" placeholder="Aim to the drip">
+            <input v-model="searchQuery" @keyup.enter="search" class="searchbar" title="searchbar" type="text" placeholder="Aim to the drip">
         </div>
     </div>
 </template>
@@ -9,6 +9,18 @@
 <script>
 export default {
     name: "searchBar",
+    data() {
+        return {
+            searchQuery: ""
+        }
+    },
+    beforeMount() {
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        if (params.has("q")) {
+            this.searchQuery = params.get("q");
+        }
+    },
     methods: {
         search: function(event) {
             

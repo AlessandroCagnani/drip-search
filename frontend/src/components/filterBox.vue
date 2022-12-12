@@ -59,7 +59,7 @@ export default {
     Slider
   },
     props: {
-        brands : null,
+        brands : { type: Array, required: false },
         categories : { type: Array, required: false },
         priceRange: { type: Array, required: false }
 
@@ -73,6 +73,16 @@ export default {
 
     };
   },
+    beforeMount() {
+      let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        if (params.has("brand")) {
+            this.filteredBrands = params.get("brand").split(" ");
+        }
+        if (params.has("categories")) {
+            this.filteredCategories = params.get("categories").split(" ");
+        }
+    },
     methods: {
     filterBrand: function(event) {
 

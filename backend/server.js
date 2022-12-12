@@ -15,10 +15,31 @@ app.use(bodyParser.json());
 /////////////       ROUTES       //////////////
 ///////////////////////////////////////////////
 
+
+app.post("/info", (req, res) => {
+
+  let info = req.body.info;
+  let facetField = `facet.field=`
+  let facet = ""
+  info.split(" ").forEach(key => {
+      facet += `&${facetField}${key}`
+  })
+  console.log("facet to search ", facet)
+
+  const url = `http://localhost:8983/solr/drip/select?${facet}&facet=true&indent=true&q.op=OR&q=*%3A*&rows=10&start=10`;
+  axios.get(url)
+      .then(response => {
+        console.log("////////////////  [FACET]:\n ", JSON.stringify(response.data.facet_counts.facet_fields.category))
+        res.status(200).json(response.data.facet_counts.facet_fields.category)
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).send(error);
+      })
+})
 app.post("/search", (req, res) => {
-  console.log(req.body);
-  const q = req.body.q;
-  console.log("q: ", q);
+  console.log("request body: "+ req.body);
+  const q = req.body.q || "*:*";
 
 //   let body = {
 //     q: q,
@@ -27,19 +48,26 @@ app.post("/search", (req, res) => {
 //     mm: "2",
 //   };
 
-  let qf = "title^3.0 category^3.0 description^1.5 color^0.5";
+  let qf = "title^3.0+category^3.0+description^1.5+color^0.5";
   let defType = "edismax";
   let mm = "2";
 
+  let category = req.body.categories;
+  let brand = req.body.brand;
+  let fq = `&fq=*:*`;
+  if (category) {
+    fq = `&fq=category:${category}`;
+  }
+
   axios({
     method: "get",
-    url: `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}`,
+    url: `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fq}&rows=20`,
     // headers: {},
     // data: body,
   })
     .then((response) => {
       console.log("response: ", response.data);
-      res.status(200).json(response.data);
+      res.status(200).json(response.data.response.docs);
     })
     .catch((error) => {
       console.log("error: ", error);

@@ -1,6 +1,6 @@
 <template>
   <div class="navbar grid">
-    <div class="navbar-logo">DRIPSEARCH</div>
+    <router-link to="/" class="navbar-logo" >DRIPSEARCH</router-link>
     <div class="filter-box"></div>
     <div class="searchbar">
       <searchBar />
@@ -54,4 +54,5 @@ export default {
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
+
 </style>

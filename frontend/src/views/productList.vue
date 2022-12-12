@@ -57,12 +57,12 @@ export default {
             url: "http://localhost:8888/search",
             data: newUrl.query,
         })
-        .then((response) => {
-            console.log(response.data);
-            return response.data;
-        })
-        .then((data) => {
-          this.itemList = Object.freeze(data.response.docs);
+            .then((response) => {
+                console.log(response.data);
+                return response.data;
+            })
+            .then((data) => {
+                this.itemList = Object.freeze(data);
           // console.log("itemList ", this.itemList);
           let perGroup = 4;
           let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
@@ -72,16 +72,35 @@ export default {
             .map((_, i) =>
               this.itemList.slice(i * perGroup, (i + 1) * perGroup)
             );
-          // let brandList = [...new Set(this.itemList.map((item) => item.brand))]
-          //   console.log(brandList)
-          // this.brands = brandList
-            this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
-
         });
     },
   },
   beforeCreate() {
+
+    //   TODO: category not working properly, need list of possible filters to be chosen before
+
     console.log("beforeCreate ", this.$route.query);
+      // let query = this.$route.query;
+      // delete query.brand
+      // delete query.categories
+
+      axios({
+          method: "post",
+          url: "http://localhost:8888/info?info=brand+category",
+          data: {info: "category brand"},
+      })
+          .then((response) => {
+              return response.data;
+          })
+          .then((data) => {
+              console.log("////////////", data);
+              data = data.filter(function(el) {
+                  return !Number.isInteger(el) && el.length >= 3;
+              })
+
+              this.brands = data;
+              this.categories = data;
+          });
 
       axios({
           method: "post",
@@ -93,7 +112,7 @@ export default {
           return response.data;
       })
       .then((data) => {
-        this.itemList = Object.freeze(data.response.docs);
+        this.itemList = Object.freeze(data);
         console.log("itemList ", this.itemList);
         let perGroup = 4;
         let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
@@ -106,7 +125,7 @@ export default {
           // console.log("////////////",brandList)
           // this.brands = brandList
 
-          this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
+          // this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
 
       });
   },
