@@ -38,7 +38,7 @@ app.post("/info", (req, res) => {
       })
 })
 app.post("/search", (req, res) => {
-  console.log("request body: "+ req.body);
+  console.log("request body: "+ JSON.stringify(req.body));
   const q = req.body.q || "*:*";
 
 //   let body = {
@@ -54,14 +54,19 @@ app.post("/search", (req, res) => {
 
   let category = req.body.categories;
   let brand = req.body.brand;
-  let fq = `&fq=*:*`;
+  let fqCat = `&fq=*:*`;
+  let fqBrand = `&fq=*:*`;
   if (category) {
-    fq = `&fq=category:${category}`;
+    fqCat = `&fq=category:${category}`;
   }
+  if (brand) {
+    fqBrand = `&fq=brand:${brand}`;
+  }
+
 
   axios({
     method: "get",
-    url: `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fq}&rows=20`,
+    url: `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fqCat}${fqBrand}&rows=20`,
     // headers: {},
     // data: body,
   })

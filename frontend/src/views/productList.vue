@@ -17,7 +17,7 @@
             <span class="item-title">{{ item.title[0] }}</span>
           </div>
           <div class="desc-box">
-            <span class="item-desc">{{ item.description[0] }}</span>
+            <span class="item-desc" v-if="item.description">{{ item.description[0]}}</span>
           </div>
           <div class="centered">
             <a class="item-button button-6" :href="item.link" target="_blanck">
@@ -98,11 +98,11 @@ export default {
           .then((data) => {
               console.log("////////////", data);
               this.brands = data.brand.filter(function(el) {
-                  return !Number.isInteger(el) && el.length >= 3;
+                  return !Number.isInteger(el) && el.length >= 4;
               })
 
               this.categories = data.category.filter(function(el) {
-                  return !Number.isInteger(el) && el.length >= 3;
+                  return !Number.isInteger(el) && el.length >= 4;
               })
 
           });
