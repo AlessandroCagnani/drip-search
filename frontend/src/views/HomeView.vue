@@ -11,6 +11,7 @@
     <img class="img8" src="https://media2.giphy.com/media/8JZjgPr6Enkpfa40Kd/giphy.webp?cid=ecf05e474irvjcz2h0azcnnpt8rgvx9qkqd94d7h9l1nwvsl&rid=giphy.webp&ct=s">
       <img class="img9" src ="https://media1.giphy.com/media/39U3UkOawgxaS4Y1JD/200w.webp?cid=ecf05e47bnhvnvyg05vx5g6uu7s5bqojyelag4cxk9ij39rk&rid=200w.webp&ct=ts">
     <img class="img10" src="https://media1.giphy.com/media/ldHhiwBKxuUTkyQ5GB/200w.webp?cid=ecf05e479ppcagb8rtio74a3h7wfw5ds7b06zgc8o5uj6yp9&rid=200w.webp&ct=s">
+      <img class="img11" src="https://media3.giphy.com/media/qZPJPv1XoXHMdJT3zK/200w.webp">
 
   </div>
 </template>
@@ -113,6 +114,12 @@ export default {
         bottom: 0px;
         right: 13%;
         width: 30rem;
+    }
+
+    .img11 {
+        z-index: 100;
+        top: 25%;
+        width: 20rem;
     }
 
 

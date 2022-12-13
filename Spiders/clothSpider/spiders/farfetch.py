@@ -2,28 +2,35 @@ import scrapy
 
 class farfetchSpider(scrapy.Spider):
     name = 'farfetch'   # indetifies the spider
-    start_urls = [
-        'https://www.farfetch.com/ch/shopping/men/jackets-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/sweaters-knitwear-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/trousers-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/t-shirts-vests-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/shirts-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
-        'https://www.farfetch.com/ch/shopping/men/denim-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
-    ]
+    # start_urls = [
+    #     'https://www.farfetch.com/ch/shopping/men/jackets-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+    #     'https://www.farfetch.com/ch/shopping/men/sweaters-knitwear-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+    #     'https://www.farfetch.com/ch/shopping/men/trousers-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+    #     'https://www.farfetch.com/ch/shopping/men/t-shirts-vests-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+    #     'https://www.farfetch.com/ch/shopping/men/shirts-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+    #     'https://www.farfetch.com/ch/shopping/men/denim-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
+    # ]
 
     # function to generate requests to given urls
-    # def start_requests(self):
-    #     urls = [
-    #         'https://www.supremenewyork.com/shop',
-    #     ]
-    #     for url in urls:
-    #         yield scrapy.Request(url=url, callback=self.parse)
+    def start_requests(self):
+        urls = [
+            'https://www.farfetch.com/ch/shopping/men/jackets-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+            'https://www.farfetch.com/ch/shopping/men/sweaters-knitwear-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+            'https://www.farfetch.com/ch/shopping/men/trousers-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+            'https://www.farfetch.com/ch/shopping/men/t-shirts-vests-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+            'https://www.farfetch.com/ch/shopping/men/shirts-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664',
+            'https://www.farfetch.com/ch/shopping/men/denim-2/items.aspx?page=1&view=90&sort=3&designer=3680277|18499883|2327807|18370|7199|619|1396825|91140|2038|1664'
+        ]
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse)
+            # for each url replace the number page with a number between 1 and 5
+            for i in range(1, 6):
+                url = url.replace('page=1', 'page=' + str(i))
+                yield scrapy.Request(url=url, callback=self.parse)
+
+
 
     def parse(self, response):
-        if response.css('.ltr-ol0ad9'):
-            url = response.css('.ltr-ol0ad9::attr(href)').get()
-            next_page = response.urljoin(url)
-            yield scrapy.Request(next_page, callback=self.parse)
 
         for item in response.css('.ltr-wp3p8x.el4qh4n0 li a::attr(href)').getall():
             if item is not None:

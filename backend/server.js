@@ -57,22 +57,35 @@ app.post("/search", (req, res) => {
   let fqCat = `&fq=*:*`;
   let fqBrand = `&fq=*:*`;
   if (category) {
-    fqCat = `&fq=category:${category}`;
+    fqCat = `&fq=category:*${category}*`;
   }
   if (brand) {
-    fqBrand = `&fq=brand:${brand}`;
+      // fq=brand:evisu&fq=brand:nike
+      if (brand.split(" ").length > 1) {
+          fqBrand = "&fq=";
+          brand.split(" ").forEach(key => {
+              fqBrand += `brand:${key} `
+          })
+          fqBrand = fqBrand.trim();
+      } else {
+          fqBrand = `&fq=brand:${brand}`;
+      }
   }
+
+  console.log("[ SEARCHING ] page: ", req.body.p)
+  let reqUrl = `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fqCat}${fqBrand}&rows=20&start=${req.body.p}`;
+    console.log("[SOLAR query call]: ", reqUrl)
 
 
   axios({
     method: "get",
-    url: `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fqCat}${fqBrand}&rows=20`,
+    url: reqUrl,
     // headers: {},
     // data: body,
   })
     .then((response) => {
       console.log("response: ", response.data);
-      res.status(200).json(response.data.response.docs);
+      res.status(200).json(response.data.response);
     })
     .catch((error) => {
       console.log("error: ", error);
@@ -85,7 +98,7 @@ app.post("/moreLikeThis", (req, res) => {
     console.log("request body: "+ req.body);
     const id = req.body.id || "*:*";
 
-    let qf = "description+title";
+    let qf = "description+title+color";
     let defType = "edismax";
     let mm = "2";
 

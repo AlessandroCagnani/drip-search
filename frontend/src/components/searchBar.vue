@@ -31,6 +31,7 @@ export default {
                 name: "search",
                 query: {
                     q: query,
+                    p: 1,
                     // brands: '#',
                     // category: '#',
                     // price: '#',

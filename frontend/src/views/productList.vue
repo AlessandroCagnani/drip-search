@@ -31,16 +31,28 @@
       </div>
     </div>
   </div>
+
+    <div class="centered">
+        <paginate
+            :page-count="this.pageCount"
+            :click-handler="pageChangeHandler"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+        >
+        </paginate>
+    </div>
 </template>
 
 <script>
 import axios from "axios";
 import filterBox from "@/components/filterBox.vue";
+import Paginate from "vuejs-paginate-next";
 
 export default {
   name: "productList",
   components: {
     filterBox,
+    Paginate
   },
   data() {
     return {
@@ -48,7 +60,8 @@ export default {
         filteredList: [],
       finalList: [],
         brands: ["supreme", "bape"],
-        categories: []
+        categories: [],
+        pageCount: 0,
     };
   },
   watch: {
@@ -62,7 +75,8 @@ export default {
         })
             .then((response) => {
                 console.log(response.data);
-                return response.data;
+                this.pageCount = Math.trunc(response.data.numFound / 20);
+                return response.data.docs;
             })
             .then((data) => {
                 this.itemList = Object.freeze(data);
@@ -114,7 +128,8 @@ export default {
       })
       .then((response) => {
           console.log(response.data);
-          return response.data;
+          this.pageCount = Math.trunc(response.data.numFound / 20);
+          return response.data.docs;
       })
       .then((data) => {
         this.itemList = Object.freeze(data);
@@ -171,6 +186,15 @@ export default {
                         .map((_, i) => this.itemList.slice(i * perGroup, (i + 1) * perGroup));
                 })
 
+        },
+        pageChangeHandler(page) {
+            this.$router.push({
+                path: "/search",
+                query: {
+                    ...this.$route.query,
+                    p: page,
+                },
+            })
         }
     }
 };
