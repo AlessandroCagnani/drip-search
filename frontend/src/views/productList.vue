@@ -23,6 +23,9 @@
             <a class="item-button button-6" :href="item.link" target="_blanck">
               See the sauce
             </a>
+              <a class="item-button button-6" @click="moreLikeThis" target="_blanck" :id="item.id">
+                  more like this
+              </a>
           </div>
         </div>
       </div>
@@ -94,12 +97,14 @@ export default {
           })
           .then((data) => {
               console.log("////////////", data);
-              data = data.filter(function(el) {
+              this.brands = data.brand.filter(function(el) {
                   return !Number.isInteger(el) && el.length >= 3;
               })
 
-              this.brands = data;
-              this.categories = data;
+              this.categories = data.category.filter(function(el) {
+                  return !Number.isInteger(el) && el.length >= 3;
+              })
+
           });
 
       axios({
@@ -142,6 +147,30 @@ export default {
                         return itemPrice <= event[1] && itemPrice >= event[0]
                     }).slice(i * perGroup, (i + 1) * perGroup)
                 );
+        },
+        moreLikeThis: function (event) {
+            let itemId = event.target.id;
+
+            axios({
+                method: "post",
+                url: "http://localhost:8888/moreLikeThis",
+                data: {id: itemId},
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    return response.data;
+                })
+                .then((data) => {
+                    this.itemList = Object.freeze(data);
+                    console.log("itemList ", this.itemList);
+                    let perGroup = 4;
+                    let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
+                    console.log(numGroups);
+                    this.finalList = new Array(numGroups)
+                        .fill("")
+                        .map((_, i) => this.itemList.slice(i * perGroup, (i + 1) * perGroup));
+                })
+
         }
     }
 };

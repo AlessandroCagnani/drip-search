@@ -29,8 +29,8 @@ app.post("/info", (req, res) => {
   const url = `http://localhost:8983/solr/drip/select?${facet}&facet=true&indent=true&q.op=OR&q=*%3A*&rows=10&start=10`;
   axios.get(url)
       .then(response => {
-        console.log("////////////////  [FACET]:\n ", JSON.stringify(response.data.facet_counts.facet_fields.category))
-        res.status(200).json(response.data.facet_counts.facet_fields.category)
+        console.log("////////////////  [FACET]:\n ", JSON.stringify(response.data.facet_counts.facet_fields))
+        res.status(200).json(response.data.facet_counts.facet_fields)
       })
       .catch(error => {
         console.log(error);
@@ -75,6 +75,28 @@ app.post("/search", (req, res) => {
     });
 });
 
+
+app.post("/moreLikeThis", (req, res) => {
+    console.log("request body: "+ req.body);
+    const id = req.body.id || "*:*";
+
+    let qf = "description+title";
+    let defType = "edismax";
+    let mm = "2";
+
+    axios({
+        method: "get",
+        url: `http://localhost:8983/solr/drip/query?q={!mlt qf=${qf} mintf=1 mindf=1}${id}`,
+    })
+        .then((response) => {
+        console.log("response: ", response.data);
+        res.status(200).json(response.data.response.docs);
+        })
+        .catch((error) => {
+        console.log("error: ", error);
+        res.status(500).send("error");
+        });
+});
 ///////////////////////////////////////////////
 ////////////     END ROUTES       /////////////
 ///////////////////////////////////////////////

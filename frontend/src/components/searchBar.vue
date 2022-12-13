@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="bar">
-            <input v-model="searchQuery" @keyup.enter="search" class="searchbar" title="searchbar" type="text" placeholder="Aim to the drip">
+            <input v-model="searchQuery" @keyup.enter="search" class="searchbar" title="searchbar" type="text" placeholder="drip your self">
         </div>
     </div>
 </template>
