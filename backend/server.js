@@ -56,9 +56,20 @@ app.post("/search", (req, res) => {
   let brand = req.body.brand;
   let fqCat = `&fq=*:*`;
   let fqBrand = `&fq=*:*`;
-  if (category) {
-    fqCat = `&fq=category:*${category}*`;
-  }
+
+    if (category) {
+        // fq=(category:*hats* OR category:*jackets*)
+        fqCat = "&fq=("
+        if (category.split(" ").length > 1) {
+            category.split(" ").forEach(key => {
+                fqCat += `category:*${key}* OR `
+            })
+            fqCat = fqCat.slice(0, -4) + ")"
+        } else {
+            fqCat = `&fq=category:*${category}*`;
+        }
+    }
+
   if (brand) {
       // fq=brand:evisu&fq=brand:nike
       if (brand.split(" ").length > 1) {
@@ -72,10 +83,11 @@ app.post("/search", (req, res) => {
       }
   }
 
-  console.log("[ SEARCHING ] page: ", req.body.p)
-  let reqUrl = `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fqCat}${fqBrand}&rows=20&start=${req.body.p}`;
-    console.log("[SOLAR query call]: ", reqUrl)
+  let page = (req.body.p - 1) * 20 || 0;
 
+  console.log("[ SEARCHING ] page: ", page)
+  let reqUrl = `http://localhost:8983/solr/drip/query?q=${q}&qf=${qf}&defType=${defType}&mm=${mm}${fqCat}${fqBrand}&rows=20&start=${page}`;
+    console.log("[SOLAR query call]: ", reqUrl)
 
   axios({
     method: "get",

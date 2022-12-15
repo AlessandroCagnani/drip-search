@@ -202,6 +202,12 @@ export default {
         this.filteredCategories = []
         this.value = [0,2000]
         this.$emit('filterPrice', this.value)
+        this.$router.push({
+            name: "search",
+            query: {
+                q: this.$route.query.q,
+            }
+        })
     }
     },
 };

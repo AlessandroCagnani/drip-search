@@ -1,6 +1,6 @@
 <template>
   <div class="navbar grid">
-    <router-link to="/" class="navbar-logo" >DRIPSEARCH</router-link>
+    <router-link to="/" class="navbar-logo" >DRIPSTATION</router-link>
     <div class="filter-box"></div>
     <div class="searchbar">
       <searchBar />

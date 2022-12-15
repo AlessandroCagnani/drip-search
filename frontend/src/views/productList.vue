@@ -3,6 +3,7 @@
     <filterBox class="sidebar"
                :brands="this.brands"
                :categories="this.categories"
+
                @filterPrice="filterPrice"
 
     />
@@ -74,8 +75,9 @@ export default {
             data: newUrl.query,
         })
             .then((response) => {
-                console.log(response.data);
-                this.pageCount = Math.trunc(response.data.numFound / 20);
+                // console.log("[ WATCH ]: response: " + JSON.stringify(response.data));
+                console.log("[ WATCH ]: new page count: " + Math.trunc(response.data.numFound / 20));
+                this.pageCount = Math.trunc(response.data.numFound / 20)+1;
                 return response.data.docs;
             })
             .then((data) => {
@@ -89,7 +91,11 @@ export default {
             .map((_, i) =>
               this.itemList.slice(i * perGroup, (i + 1) * perGroup)
             );
-        });
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+
     },
   },
   beforeCreate() {
@@ -97,9 +103,8 @@ export default {
     //   TODO: category not working properly, need list of possible filters to be chosen before
 
     console.log("beforeCreate ", this.$route.query);
-      // let query = this.$route.query;
-      // delete query.brand
-      // delete query.categories
+
+
 
       axios({
           method: "post",
@@ -128,7 +133,7 @@ export default {
       })
       .then((response) => {
           console.log(response.data);
-          this.pageCount = Math.trunc(response.data.numFound / 20);
+          this.pageCount = Math.trunc(response.data.numFound / 20)+1;
           return response.data.docs;
       })
       .then((data) => {
@@ -147,7 +152,10 @@ export default {
 
           // this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
 
-      });
+      })
+          .catch((error) => {
+              console.log(error.message);
+          });
   },
   beforeMount() {},
     methods: {
