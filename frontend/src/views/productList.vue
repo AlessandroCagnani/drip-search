@@ -1,4 +1,9 @@
 <template>
+    <div class="cluster-box">
+        <div class="cluster" v-for="cluster in clusters" @click="renderCluster">
+            {{ cluster.label[0] }}
+        </div>
+    </div>
   <div class="grid">
     <filterBox class="sidebar"
                :brands="this.brands"
@@ -63,6 +68,7 @@ export default {
         brands: ["supreme", "bape"],
         categories: [],
         pageCount: 0,
+        clusters: [],
     };
   },
   watch: {
@@ -82,7 +88,57 @@ export default {
             })
             .then((data) => {
                 this.itemList = Object.freeze(data);
-          // console.log("itemList ", this.itemList);
+
+
+                let itemToCluster = this.itemList.map((item) => {
+                    return {
+                        id: item.id,
+                        title: item.title,
+                        description: item.description,
+                        image: item.image,
+                        link: item.link,
+                        brand: item.brand,
+                        category: item.category,
+                        price: item.price,
+                    };
+                });
+                console.log("[ clustering ] item list to be clustered:  ", itemToCluster);
+
+                let body = {
+                    "algorithm": "Lingo",
+                    "language": "English",
+                    "parameters": {
+                        "preprocessing": {
+                            "documentAssigner": {
+                                "exactPhraseAssignment": true
+                            }
+                        }
+                    },
+                    "documents": itemToCluster
+                }
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8880/service/cluster",
+                    data: body
+                }).then((response) => {
+                    console.log("[ clustering ] response: ", response.data);
+
+                    let newCLusters = []
+                    response.data.clusters.forEach((cluster)=> {
+                        newCLusters.push({
+                            documents: cluster.documents,
+                            label: cluster.labels,
+                        })
+                    })
+
+                    this.clusters = newCLusters;
+
+                }).catch((error) => {
+                    console.log(error);
+                });
+
+                // console.log("itemList ", this.itemList);
           let perGroup = 4;
           let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
           // console.log(numGroups);
@@ -100,11 +156,7 @@ export default {
   },
   beforeCreate() {
 
-    //   TODO: category not working properly, need list of possible filters to be chosen before
-
     console.log("beforeCreate ", this.$route.query);
-
-
 
       axios({
           method: "post",
@@ -138,6 +190,57 @@ export default {
       })
       .then((data) => {
         this.itemList = Object.freeze(data);
+
+          let itemToCluster = this.itemList.map((item) => {
+              return {
+                  id: item.id,
+                  title: item.title,
+                  description: item.description,
+                  image: item.image,
+                  link: item.link,
+                  brand: item.brand,
+                  category: item.category,
+                  price: item.price,
+              };
+          });
+          console.log("[ clustering ] item list to be clustered:  ", itemToCluster);
+
+          let body = {
+              "algorithm": "Lingo",
+              "language": "English",
+              "parameters": {
+                  "preprocessing": {
+                      "documentAssigner": {
+                          "exactPhraseAssignment": true
+                      }
+                  }
+              },
+              "documents": itemToCluster
+          }
+
+          axios({
+              method: "post",
+              url: "http://localhost:8880/service/cluster",
+              data: body
+          }).then((response) => {
+              console.log("[ clustering ] response: ", response.data);
+
+              let newCLusters = []
+              response.data.clusters.forEach((cluster)=> {
+                  newCLusters.push({
+                      documents: cluster.documents,
+                      label: cluster.labels,
+                  })
+              })
+
+              this.clusters = newCLusters;
+
+          }).catch((error) => {
+              console.log(error);
+          });
+
+
+
         console.log("itemList ", this.itemList);
         let perGroup = 4;
         let numGroups = Math.floor(this.itemList.length / perGroup) + 1;
@@ -146,18 +249,13 @@ export default {
           .fill("")
           .map((_, i) => this.itemList.slice(i * perGroup, (i + 1) * perGroup));
 
-          // let brandList = [...new Set(this.itemList.map((item) => item.brand))]
-          // console.log("////////////",brandList)
-          // this.brands = brandList
-
-          // this.categories = [...new Set(this.itemList.map((item) => item.category[0]))]
-
       })
           .catch((error) => {
               console.log(error.message);
           });
   },
-  beforeMount() {},
+  mounted() {
+  },
     methods: {
         filterPrice: function (event) {
             let perGroup = 4;
@@ -203,13 +301,74 @@ export default {
                     p: page,
                 },
             })
+        },
+        renderCluster: function (event) {
+            console.log("[ render cluster ] cluster ", event.target.innerHTML);
+            let clusterLabel = event.target.innerHTML;
+
+            let docIndex = []
+
+            this.clusters.forEach((cluster) => {
+                if (cluster.label[0] === clusterLabel) {
+                    docIndex = cluster.documents;
+                }
+            })
+
+            if (docIndex.length > 1) {
+                let clusterDocs = docIndex.map((index) => {
+                    return this.itemList[index];
+                })
+                console.log("[ rendering cluster ] clusterDocs:\n ", clusterDocs);
+                let perGroup = 4;
+                let numGroups = Math.floor(clusterDocs.length / perGroup) + 1;
+                console.log(numGroups);
+                this.finalList = new Array(numGroups)
+                    .fill("")
+                    .map((_, i) => clusterDocs.slice(i * perGroup, (i + 1) * perGroup));
+            }
         }
+
     }
 };
 </script>
 
 <style scoped>
 /* @import "@coreui/coreui/dist/css/coreui.min.css"; */
+
+/*
+    section for cluster
+*/
+
+.cluster-box {
+    min-width: 100vw;
+    max-width: 100vw;
+    min-height: 5vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    margin-bottom: 2vh;
+
+}
+
+.cluster {
+    min-width: 4vw;
+    max-width: 10%;
+    max-height: 7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7rem;
+    padding: 2px;
+
+    border-radius: 25px;
+    background-color: #d3d3d3;
+
+}
+
+
+
 
 .sidebar {
   max-width: 20vw;

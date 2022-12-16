@@ -39,7 +39,7 @@ app.post("/info", (req, res) => {
 })
 app.post("/search", (req, res) => {
   console.log("request body: "+ JSON.stringify(req.body));
-  const q = req.body.q || "*:*";
+  let q = req.body.q || "*:*";
 
 //   let body = {
 //     q: q,
